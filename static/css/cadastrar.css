@@ -1,0 +1,143 @@
+:root{
+    font-family: 'Poppins';
+}
+
+body{
+    background-color: #184e77;
+}
+
+main{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+h1{
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 5rem;
+    color: #76c893;
+}
+
+form{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    width: 35rem;
+    background-color: #d9ed92;
+    padding: 4rem 2rem;
+    border-radius: 2rem;
+}
+
+
+form input{
+    border: none;
+    outline: none;
+    height: 2.5rem;
+    font-size: 1.5rem;
+    padding: 1.5rem 1rem;
+    width: 100%;
+}
+
+form label{
+    align-self: center;
+    padding-left: .5rem;
+    font-size: 1.5rem;
+    justify-self: flex-end;
+    user-select: none;
+}
+
+form button{
+    background: none;
+    border: none;
+    background-color: #76c893;
+    grid-column: span 2;
+    height: 3rem;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    transition: 300ms;
+    width: 70%;
+    justify-self: center;
+}
+
+form button:hover{
+    cursor: pointer;
+    background-color: #168aad;
+    color: white;
+}
+
+form button:active{
+    background-color: #184e77;
+}
+
+
+.input-field{
+    background-color: white;
+    border-radius: .2rem;
+    outline: #168aad solid .1rem;
+    height: 3rem;
+}
+
+.input-field:has(*:focus),
+.input-field:focus{
+    outline: #168aad solid .18rem;
+}
+
+.pass-field{
+    overflow: hidden;
+    display: flex;
+}
+.toggle-password{
+    padding: 0 1rem;
+    font-size: 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: 300ms;
+}
+
+.toggle-password:hover{
+    cursor: pointer;
+    background-color: #d9ed92;
+}
+.toggle-password:active{
+    cursor: pointer;
+    background-color: #76c893;
+}
+
+.wrong{
+    outline: red solid .18rem;
+}
+
+
+@media (width < 40rem), (orientation: portrait){
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    main{
+        position: static;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translate(0, 0);
+        width: 100%;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+    }
+    form label{
+        display: none;
+    }
+    form button{
+        align-self: center;
+    }
+    .toggle-password{
+        height: 100%;
+    }
+}

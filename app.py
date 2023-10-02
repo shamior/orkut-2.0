@@ -3,8 +3,9 @@ from platform import system
 from flask import *
 from models import db
 from models import Usuario
+from werkzeug.security import check_password_hash, generate_password_hash
 
-
+sucesso_cadastro = False
 
 #A URI tem diferenca do linux para o windows
 #Como estou usando linux e vocês windows
@@ -27,24 +28,55 @@ db.init_app(app)
 
 @app.route('/', methods=["POST", "GET"])
 def index():
+    global sucesso_cadastro
     if request.method == "GET":
-        sucesso = False
-        if 'sucesso_cadastro' in session:
-            sucesso = session['sucesso_cadastro']
+        sucesso = sucesso_cadastro
+        sucesso_cadastro = False
         return render_template("index.html", sucesso_cadastro=sucesso)
     else:
-        return ""
+        #consulta no banco o usuario
+        user = Usuario.query.filter_by(usuario="usuario vindo do formulario").first()
+        if user == None:
+            return "usuario nao cadastrado"
+        else:
+            if check_password_hash("senha do banco de dados", "senha do formulario"):
+                return "senha correta"
+            else:
+                return "senha incorreta"
 
 
 
 @app.route('/cadastrar', methods=["POST", "GET"])
 def cadastrar():
+    global sucesso_cadastro
     if request.method == "GET":
-        session['sucesso_cadastro'] = False
+        sucesso_cadastro = False
         return render_template("cadastrar.html")
     else:
-        session['sucesso_cadastro'] = True
+        dados = request.form
+        senha_hash = generate_password_hash(dados['senha'])
+        user = Usuario(
+            usuario=dados['usuario'],
+            nome=dados['nome'],
+            sobrenome=dados['sobrenome'],
+            senha=senha_hash
+        )
+        db.session.add(user)
+        db.session.commit()
+        sucesso_cadastro = True
         return redirect(url_for("index"))
+
+
+
+@app.route("/listar/usuarios")
+def listar_usuarios():
+    users = Usuario.query.all()
+    return render_template(
+        "listar_usuarios.html",
+        usuarios=users
+    )
+
+
 
 
 with app.app_context():

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>usuarios</title>
+</head>
+<body style="display: flex; gap: 20px;">
+    {% for user in usuarios %}
+    <div style="background-color: aquamarine; padding: 0 20px;">
+        <p>Nome: {{ user.nome }}</p>
+        <p>Senha: {{ user.senha }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>

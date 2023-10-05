@@ -1,14 +1,15 @@
-let icon_containers = document.querySelectorAll(".toggle-password")
+const togglePasswordButtons = document.querySelectorAll(".toggle-password")
 
+
+//icones do phosphor icons que o javascript vai mudar na pagina
 const eye_open = '<i class="ph ph-eye"></i>'
 const eye_closed = '<i class="ph ph-eye-slash"></i>'
 const error = '<i class="ph-fill ph-x-circle"></i>'
 const check = '<i class="ph-fill ph-check-fat"></i>'
 
-icon_containers.forEach(container => {
+togglePasswordButtons.forEach(container => {
     container.addEventListener("click", ()=>{
-        const html = container.innerHTML
-        if (html === eye_closed){
+        if (container.innerHTML === eye_closed){
             container.innerHTML = eye_open
             container.previousElementSibling.type = "password"
         }else{
@@ -19,48 +20,50 @@ icon_containers.forEach(container => {
 })
 
 
-const form = document.querySelector("form")
-const botao = document.querySelector("button")
-botao.disabled = true
+const submitButton = document.querySelector("button")
+submitButton.disabled = true
 
-let passwordsMatch = false
+let passwordValid = false
 let usuarioUnico = false
 
 
-form.addEventListener("submit", (event)=>{
-    event.preventDefault()
-    if (passwordsMatch) form.submit()
-})
-
-
 const passInputs = document.querySelectorAll(".pass")
-const password = passInputs[0]
-const repeatPass = passInputs[1]
+const [password, repeatPass] = passInputs
 passInputs.forEach((element)=>{
-    element.addEventListener("change", ()=>{
-        if (password.value === repeatPass.value){
-            password.parentElement.classList.remove('wrong')
-            repeatPass.parentElement.classList.remove('wrong')
-            passwordsMatch = true
-        }else if (password.value && repeatPass.value){
-            password.parentElement.classList.add('wrong')
-            repeatPass.parentElement.classList.add('wrong')
-            passwordsMatch = false
-        }
-        botao.disabled = !(passwordsMatch && usuarioUnico)
-    })
+    element.addEventListener("change", onPassChange)
 })
+//cada vez que algum dos campos de senha muda
+//verifica se os campos estão iguais e altera o estado
+//do botao e cores dos inputs
+function onPassChange(event){
+    let bothHaveValue = password.value && repeatPass.value
+    let match = password.value === repeatPass.value
+    passwordValid = match && bothHaveValue
+    submitButton.disabled = !(passwordValid && usuarioUnico)
+    
+    if (match || !bothHaveValue){
+        password.parentElement.classList.remove('wrong')
+        repeatPass.parentElement.classList.remove('wrong')
+        return
+    }
+    password.parentElement.classList.add('wrong')
+    repeatPass.parentElement.classList.add('wrong')
+}
+
+
 
 const userIcon = document.querySelector(".icon")
-
 const userField = document.querySelector("#user")
+//cada vez que o campo de usuario mudar, faz uma consulta
+//para o backend na rota /existe/<usuario> para ver se o
+//usuario já existe no banco de dados
 userField.addEventListener("change", (event)=>{
-    botao.disabled = true
+    submitButton.disabled = true
     if (userField.value == ""){
         //nao pode ficar vazio
-        userField.parentElement.classList.add("wrong")
+        userField.parentElement.classList.remove("wrong")
         userField.parentElement.classList.remove("right")
-        userIcon.innerHTML = error
+        userIcon.innerHTML = ""
         usuarioUnico = false
         return
     }
@@ -81,7 +84,7 @@ userField.addEventListener("change", (event)=>{
                             usuarioUnico = true
                             userIcon.innerHTML = check
                         }
-                        botao.disabled = !(passwordsMatch && usuarioUnico)
+                        submitButton.disabled = !(passwordValid && usuarioUnico)
                     }
                 )
         )

@@ -2,6 +2,8 @@ let icon_containers = document.querySelectorAll(".toggle-password")
 
 const eye_open = '<i class="ph ph-eye"></i>'
 const eye_closed = '<i class="ph ph-eye-slash"></i>'
+const error = '<i class="ph-fill ph-x-circle"></i>'
+const check = '<i class="ph-fill ph-check-fat"></i>'
 
 icon_containers.forEach(container => {
     container.addEventListener("click", ()=>{
@@ -18,8 +20,11 @@ icon_containers.forEach(container => {
 
 
 const form = document.querySelector("form")
+const botao = document.querySelector("button")
+botao.disabled = true
 
 let passwordsMatch = false
+let usuarioUnico = false
 
 
 form.addEventListener("submit", (event)=>{
@@ -42,5 +47,42 @@ passInputs.forEach((element)=>{
             repeatPass.parentElement.classList.add('wrong')
             passwordsMatch = false
         }
+        botao.disabled = !(passwordsMatch && usuarioUnico)
     })
+})
+
+const userIcon = document.querySelector(".icon")
+
+const userField = document.querySelector("#user")
+userField.addEventListener("change", (event)=>{
+    botao.disabled = true
+    if (userField.value == ""){
+        //nao pode ficar vazio
+        userField.parentElement.classList.add("wrong")
+        userField.parentElement.classList.remove("right")
+        userIcon.innerHTML = error
+        usuarioUnico = false
+        return
+    }
+    fetch(`/existe/${userField.value}`)
+        .then(
+            response => response.json()
+                .then(
+                    usuario => {
+                        if (usuario.existe){
+                            //nao pode conter usuarios duplicados
+                            userField.parentElement.classList.add("wrong")
+                            userField.parentElement.classList.remove("right")
+                            userIcon.innerHTML = error
+                            usuarioUnico = false
+                        }else{
+                            userField.parentElement.classList.add("right")
+                            userField.parentElement.classList.remove("wrong")
+                            usuarioUnico = true
+                            userIcon.innerHTML = check
+                        }
+                        botao.disabled = !(passwordsMatch && usuarioUnico)
+                    }
+                )
+        )
 })

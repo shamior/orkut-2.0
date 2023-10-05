@@ -76,7 +76,10 @@ def listar_usuarios():
         usuarios=users
     )
 
-
+@app.route("/existe/<usuario>")
+def existe(usuario):
+    user = Usuario.query.filter_by(usuario=usuario).first()
+    return jsonify({"existe": bool(user)})
 
 
 with app.app_context():

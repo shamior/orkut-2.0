@@ -62,13 +62,13 @@ form button{
     justify-self: center;
 }
 
-form button:hover{
+form button:hover:enabled{
     cursor: pointer;
     background-color: #168aad;
     color: white;
 }
 
-form button:active{
+form button:active:enabled{
     background-color: #184e77;
 }
 
@@ -85,16 +85,21 @@ form button:active{
     outline: #168aad solid .18rem;
 }
 
-.pass-field{
+.pass-field, .user-field{
     overflow: hidden;
     display: flex;
 }
-.toggle-password{
+
+
+.toggle-password, .icon{
     padding: 0 1rem;
     font-size: 1.5rem;
     height: 100%;
     display: flex;
     align-items: center;
+}
+
+.toggle-password{
     transition: 300ms;
 }
 
@@ -107,9 +112,21 @@ form button:active{
     background-color: #76c893;
 }
 
+.ph-x-circle{
+    color: red;
+}
+
+.ph-check-fat{
+    color: blue
+}
+
 .wrong{
     outline: red solid .18rem;
 }
+.right{
+    outline: blue solid .18rem;
+}
+
 
 
 @media (width < 40rem), (orientation: portrait){
@@ -137,7 +154,7 @@ form button:active{
     form button{
         align-self: center;
     }
-    .toggle-password{
+    .toggle-password, .icon{
         height: 100%;
     }
 }

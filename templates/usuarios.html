@@ -5,11 +5,12 @@
     <title>Orkut 2.0 | Usuarios</title>
     <link rel="shortcut icon" href="/static/img/logo.png" type="image/x-icon">
 </head>
-<body style="display: flex; gap: 20px;">
+<body style="display: grid; gap: 20px; grid-template-columns: repeat(5, 1fr);">
     {% for user in usuarios %}
     <div style="background-color: aquamarine; padding: 0 20px;">
-        <p>Nome: {{ user.nome }}</p>
-        <p>Senha: {{ user.senha }}</p>
+        <p>Nome: {{ user.nome }} {{ user.sobrenome }}</p>
+        <p>Usuario: {{ user.usuario }}</p>
+        <p>Senha: {{ user.senha[:30] }}...</p>
     </div>
     {% endfor %}
 </body>

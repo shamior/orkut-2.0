@@ -74,13 +74,13 @@ def cadastrar():
 def listar_usuarios():
     users = Usuario.query.all()
     return render_template(
-        "listar_usuarios.html",
+        "usuarios.html",
         usuarios=users
     )
 
-@app.route("/existe/<usuario>")
-def existe(usuario):
-    user = Usuario.query.filter_by(usuario=usuario).first()
+@app.route("/existe/<user>")
+def existe(user):
+    user = Usuario.query.filter_by(usuario=user).first()
     return jsonify({"existe": bool(user)})
 
 

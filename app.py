@@ -24,15 +24,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = uri_db
 db.init_app(app)
 
 
-
-
-@app.route('/', methods=["POST", "GET"])
+@app.route("/")
 def index():
-    global sucesso_cadastro
+    return render_template("index.html")
+
+@app.route('/login', methods=["POST", "GET"])
+def login():
     if request.method == "GET":
-        sucesso = sucesso_cadastro
-        sucesso_cadastro = False
-        return render_template("index.html", sucesso_cadastro=sucesso)
+        sucesso = False
+        if 'sucesso_cadastro' in session:
+            sucesso = session['sucesso_cadastro']
+        session['sucesso_cadastro'] = False
+        return render_template("login.html", sucesso_cadastro=sucesso)
     else:
         #consulta no banco o usuario
         user = Usuario.query.filter_by(usuario="usuario vindo do formulario").first()
@@ -48,9 +51,8 @@ def index():
 
 @app.route('/cadastrar', methods=["POST", "GET"])
 def cadastrar():
-    global sucesso_cadastro
     if request.method == "GET":
-        sucesso_cadastro = False
+        session['sucesso_cadastro'] = False
         return render_template("cadastrar.html")
     else:
         dados = request.form
@@ -63,8 +65,8 @@ def cadastrar():
         )
         db.session.add(user)
         db.session.commit()
-        sucesso_cadastro = True
-        return redirect(url_for("index"))
+        session['sucesso_cadastro'] = True
+        return redirect(url_for("login"))
 
 
 

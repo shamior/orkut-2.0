@@ -26,11 +26,16 @@ db.init_app(app)
 
 @app.route("/")
 def index():
+    if 'logado' in session:
+        data = session['logado']
+        return render_template("welcome.html", nome=f"{data['nome']} {data['sobrenome']}")
     return render_template("index.html")
 
 @app.route('/login', methods=["POST", "GET"])
 def login():
     if request.method == "GET":
+        if 'logado' in session:
+            return redirect(url_for('index'))
         sucesso = False
         if 'sucesso_cadastro' in session:
             sucesso = session['sucesso_cadastro']
@@ -38,12 +43,17 @@ def login():
         return render_template("login.html", sucesso_cadastro=sucesso)
     else:
         #consulta no banco o usuario
-        user = Usuario.query.filter_by(usuario="usuario vindo do formulario").first()
+        user = Usuario.query.filter_by(usuario=request.form['usuario']).first()
         if user == None:
             return "usuario nao cadastrado"
         else:
-            if check_password_hash("senha do banco de dados", "senha do formulario"):
-                return "senha correta"
+            if check_password_hash(user.senha, request.form['senha']):
+                session['logado'] = {
+                    "nome": user.nome,
+                    "usuario": user.usuario,
+                    "sobrenome": user.sobrenome
+                }
+                return redirect(url_for('index'))
             else:
                 return "senha incorreta"
 

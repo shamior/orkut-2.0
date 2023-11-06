@@ -1,5 +1,98 @@
-<html>
-    <body>
-        <h1>Seja bem vindo ao orkut 2.0 {{nome}}</h1>
-    </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste</title>
+    <style>
+        *{
+            margin: 3px;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        textarea{
+            width: 80%;
+            height: 200px;
+        }
+        .post{
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            padding: 10px;
+            background-color: aquamarine;
+            border-radius: 5px;
+        }
+        i{
+            font-size: 30px;
+            color: red;
+            align-self: flex-end;
+        }
+        i:hover{
+            cursor: pointer;
+        }
+        .post-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .posts{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px;
+            width: 100%;
+            align-items: center;
+        }
+        .time{
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Seja bem vindo {{ user.nome }}</h1>
+
+    <h3>Postar algo</h3>
+    <form method="POST" >
+        <textarea name="post"></textarea>
+        <button>Enviar</button>
+    </form>
+    <div class="posts">
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <div class="authors">
+                        <p>De: {{ post.de }}</p>
+                        <p>Para: {{ post.para }}</p>
+                    </div>
+                    <div class="time">
+                        <i class="ph ph-trash" data-id="{{ post.id }}"></i>
+                        <p>{{ post.criado_em.strftime("%d/%m/%Y") }}</p>
+                        <p>{{ post.criado_em.strftime("%H:%M") }}</p>
+                    </div>
+                </div>
+                <pre class="content">{{ post.conteudo }}</pre>
+            </div>
+        {% endfor %}
+    </div>
+    <h2><a href="/logout">Sair</a></h2>
+    <script>
+        const trashes = document.querySelectorAll(".ph-trash")
+        trashes.forEach(trash => {
+            trash.addEventListener('click', evento => {
+                const id = trash.dataset.id
+                if (id && confirm("Tem certeza?")){
+                    fetch(`/posts/${id}`, {method: 'DELETE'})
+                        .then(resp => resp.json())
+                        .then(json => console.log(json))
+                        .then(document.location.reload())
+                }
+            })
+        })
+    </script>
+</body>
 </html>

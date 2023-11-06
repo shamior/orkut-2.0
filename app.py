@@ -2,7 +2,8 @@ import os
 from platform import system
 from flask import *
 from models import db
-from models import Usuario
+from models import Usuario, Post
+from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 
 sucesso_cadastro = False
@@ -24,12 +25,48 @@ app.config['SQLALCHEMY_DATABASE_URI'] = uri_db
 db.init_app(app)
 
 
-@app.route("/")
+
+def login_required(funcao):
+    @wraps(funcao)
+    def inner(*args, **kwargs):
+        if 'logado' in session:
+            return funcao(*args, **kwargs)
+        else:
+            return redirect(url_for('login'))
+    return inner
+
+
+
+
+
+
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    if 'logado' in session:
-        data = session['logado']
-        return render_template("welcome.html", nome=f"{data['nome']} {data['sobrenome']}")
-    return render_template("index.html")
+    if not 'logado' in session:
+        return render_template("index.html")
+    
+
+    user = session['logado']
+    if request.method == 'POST':
+        new_post = Post(
+            conteudo=request.form['post'],
+            para=session['logado']['usuario'],
+            de=session['logado']['usuario']
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        print(request.form['post'])
+        return redirect(url_for('index'))
+    
+    posts = \
+    Post.query.filter_by(
+        de=user['usuario'],
+        para=user['usuario']
+    ).order_by(
+        Post.criado_em.desc(),
+    ).all()
+    return render_template('welcome.html', user=user, posts=posts)
+
 
 @app.route('/login', methods=["POST", "GET"])
 def login():
@@ -79,14 +116,35 @@ def cadastrar():
         return redirect(url_for("login"))
 
 
-
 @app.route("/listar/usuarios")
+@login_required
 def listar_usuarios():
     users = Usuario.query.all()
     return render_template(
         "usuarios.html",
         usuarios=users
     )
+
+@app.route("/logout")
+@login_required
+def logout():
+    del session['logado']
+    return redirect(url_for('login'))
+
+
+@app.route("/posts/<id>", methods=['GET', 'DELETE'])
+@login_required
+def posts(id):
+    query = Post.query.filter_by(id=id)
+    if request.method == 'GET':
+        post = query.first()
+        if post:
+            return post.conteudo
+        return 'post nao encontrado'
+    
+    deletions = query.delete()
+    db.session.commit()
+    return jsonify({"deletions": deletions})
 
 @app.route("/existe/<user>")
 def existe(user):

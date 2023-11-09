@@ -139,7 +139,7 @@ def posts(id):
     if request.method == 'GET':
         post = query.first()
         if post:
-            return post.conteudo
+            return f"<h1>{post.de}</h1><pre>{post.conteudo}</pre>"
         return 'post nao encontrado'
     
     deletions = query.delete()

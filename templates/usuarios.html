@@ -7,12 +7,11 @@
 </head>
 <body style="display: grid; gap: 20px; grid-template-columns: repeat(5, 1fr);">
     {% for user in usuarios %}
-    <div style="background-color: aquamarine; padding: 0 20px;">
+    <a style="background-color: aquamarine; padding: 0 20px; text-decoration: none; color: black;" href="/{{ user.usuario }}/posts">
         <p>Nome: {{ user.nome }} {{ user.sobrenome }}</p>
         <p>Usuario: {{ user.usuario }}</p>
-        <p>Senha: {{ user.senha[:30] }}...</p>
-        <p>Criado em: {{ user.criado_em }}...</p>
-    </div>
+        <p>Membro desde: {{ user.criado_em.strftime("%d/%m/%Y %H:%M") }}</p>
+    </a>
     {% endfor %}
 </body>
 </html>

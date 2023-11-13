@@ -1,0 +1,106 @@
+:root{
+    --altura-nav: 70px;
+}
+
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+nav{
+    display: flex;
+    align-items: center;
+    position: fixed;
+    margin: 0;
+    height: var(--altura-nav);
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background-color: bisque;
+    justify-content: space-between;
+}
+nav .wrapper{
+    display: flex;
+    gap: 40px;
+    margin: 0px 30px;
+}
+
+main{
+    padding: 10px;
+    padding-top: var(--altura-nav);
+}
+
+nav a{
+    font-size: 30px;
+    text-decoration: none;
+    color: black;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+form button{
+    width: 100px;
+    height: 50px;
+    font-size: 20px;
+}
+
+
+textarea{
+    width: 80%;
+    height: 200px;
+}
+.post{
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    background-color: aquamarine;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+.left-side{
+    display: flex;
+    gap: 10px;
+}
+
+i{
+    font-size: 30px;
+    color: red;
+    align-self: flex-end;
+}
+i:hover{
+    cursor: pointer;
+}
+.post-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: darkgray;
+    padding: 10px;
+}
+.posts{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+}
+.time{
+    text-align: center;
+}
+
+.content{
+    background-color: darkseagreen;
+    text-wrap: wrap;
+    margin: 5px;
+    min-height: 50px;
+    border-radius: 5px;
+    padding: 10px;
+}
